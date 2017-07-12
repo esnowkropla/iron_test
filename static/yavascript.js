@@ -2,8 +2,6 @@ var author = document.getElementById("name");
 var summary = document.getElementById("summary");
 var contents = document.getElementById("contents");
 
-alert("wat");
-
 var button = document.getElementById("submit");
 button.onclick = function() {
 	var request = new XMLHttpRequest();
@@ -11,11 +9,20 @@ button.onclick = function() {
 	request.setRequestHeader("Content-type", "application/json");
 	request.onload = function() {
 		alert(request.responseText);
-	}
+	};
 
-	console.log("author: " + author.value);
-	console.log("summary: " + summary.value);
-	console.log("contents: " + contents.value);
 	var send = "{ \"author_handle\": \"" + author.value + "\", \"summary\": \"" + summary.value + "\", \"content\": \"" + contents.value+ "\" }";
 	request.send(send);
 }
+
+function ping() {
+	var request = new XMLHttpRequest();
+	request.open('GET', "http://localhost:3000/feed");
+	request.setRequestHeader("Content-type", "application/json");
+	request.onload = function() {
+		alert(request.responseText);
+	};
+	request.send();
+	setTimeout(ping, 5000);
+}
+//ping();
