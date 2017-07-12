@@ -62,8 +62,8 @@ impl Handlers {
             feed: FeedHandler::new(database.clone()),
             make_post: MakePostHandler::new(database.clone()),
             post: PostHandler::new(database.clone()),
-            index: IndexHandler::new(database.clone()),
-            script: ScriptHandler::new(database.clone()),
+            index: IndexHandler::new(),
+            script: ScriptHandler::new(),
         }
     }
 }
@@ -107,25 +107,10 @@ impl Handler for MakePostHandler {
         let mut payload = String::new();
         try_handler!(req.body.read_to_string(&mut payload));
 
-        println!("{}", payload);
         let post: MakePost = match serde_json::from_str(&payload) {
             Ok(stuff) => stuff,
-            Err(e) => {
-                println!("encountered error {}", e);
-                MakePost {
-                    author_handle: String::from("def name"),
-                    summary: String::from("def short"),
-                    content: String::from("def long"),
-                }
-            }
+            Err(_) => return Ok(Response::with(status::BadRequest)),
         };
-
-        println!(
-            "author: {}\nsummart: {}\ncontent: {}",
-            post.author_handle,
-            post.summary,
-            post.content
-        );
 
         let post = Post::from_post(
             &post.summary,
@@ -171,21 +156,19 @@ impl Handler for PostHandler {
     }
 }
 
-pub struct IndexHandler {
-    database: Arc<Mutex<Database>>,
-}
+pub struct IndexHandler;
 
 impl IndexHandler {
-    fn new(database: Arc<Mutex<Database>>) -> IndexHandler {
-        IndexHandler { database: database }
+    fn new() -> IndexHandler {
+        IndexHandler {}
     }
 }
 
 impl Handler for IndexHandler {
-    fn handle(&self, req: &mut Request) -> IronResult<Response> {
+    fn handle(&self, _: &mut Request) -> IronResult<Response> {
         let mut file = match File::open("static/index.html") {
             Ok(result) => result,
-            Err(e) => panic!("Couldn't open file index!"),
+            Err(e) => panic!("Error {}", e),
         };
 
         let mut contents = String::new();
@@ -197,21 +180,19 @@ impl Handler for IndexHandler {
     }
 }
 
-pub struct ScriptHandler {
-    database: Arc<Mutex<Database>>,
-}
+pub struct ScriptHandler;
 
 impl ScriptHandler {
-    fn new(database: Arc<Mutex<Database>>) -> ScriptHandler {
-        ScriptHandler { database: database }
+    fn new() -> ScriptHandler {
+        ScriptHandler {}
     }
 }
 
 impl Handler for ScriptHandler {
-    fn handle(&self, req: &mut Request) -> IronResult<Response> {
+    fn handle(&self, _: &mut Request) -> IronResult<Response> {
         let mut file = match File::open("static/yavascript.js") {
             Ok(result) => result,
-            Err(e) => panic!("Couldn't open file yavascript!"),
+            Err(e) => panic!("Error {}", e),
         };
 
         let mut contents = String::new();
@@ -226,7 +207,7 @@ impl Handler for ScriptHandler {
 pub struct JsonAfterMiddleware;
 
 impl AfterMiddleware for JsonAfterMiddleware {
-    fn after(&self, req: &mut Request, mut res: Response) -> IronResult<Response> {
+    fn after(&self, _: &mut Request, mut res: Response) -> IronResult<Response> {
         match res.headers.get::<ContentType>() {
             None => res.headers.set(ContentType::json()),
             _ => (),
