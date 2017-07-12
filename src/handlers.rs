@@ -119,7 +119,7 @@ impl Handler for MakePostHandler {
         );
         lock!(self.database).add_post(post);
 
-        Ok(Response::with((status::Created, payload)))
+        Ok(Response::with((status::Created, "Post Successful")))
     }
 }
 
