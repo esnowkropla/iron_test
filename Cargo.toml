@@ -5,6 +5,8 @@ authors = ["Elliot Snow-Kropla <esnowkropla@gmail.com>"]
 
 [dependencies]
 iron = "*"
+staticfile = "*"
+mount = "*"
 router = "*"
 logger = "*"
 env_logger = "*"

@@ -52,21 +52,29 @@
 	<p>Hi from Rust</p>
   </body>
 
+  <table border="0" cellspacing=10 width="650">
+  <tr>
+  <td>
 	<div>
-		<label for="name">Name:</label>
+		<label for="name"> name: </label>
 		<input type="text" id="name" name="author_handle">
 	</div>
 	<div>
-		<label for="summary">Summary:</label>
+		<label for="summary"> summary: </label>
 		<input type="text" id="summary" name="summary">
 	</div>
 	<div>
-		<label for="msg">Message:</label>
+		<label for="msg"> message: </label>
 		<textarea id="contents" name="contents"></textarea>
 	</div>
 	<div class="button">
 		<button type="submit" id="submit">Send your message</button>
 	</div>
+  </td>
+  <td id="display">
+  </td>
+  </tr>
+  </table>
 
   <script src="yavascript.js"></script>
 </html>
