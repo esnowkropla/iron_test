@@ -61,5 +61,5 @@ fn main() {
     chain.link_after(json_content_middleware);
     chain.link_after(logger_after);
 
-    Iron::new(chain).http("192.168.2.18:3000").unwrap();
+    Iron::new(chain).http("138.197.164.23").unwrap();
 }
