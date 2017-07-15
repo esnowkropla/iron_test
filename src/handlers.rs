@@ -2,7 +2,6 @@ extern crate serde;
 extern crate serde_json;
 
 use std::sync::{Arc, Mutex};
-use std::fs::File;
 use std::io::Read;
 use iron::{Handler, status, IronResult, Response, Request, AfterMiddleware};
 use iron::headers::ContentType;
@@ -51,8 +50,6 @@ pub struct Handlers {
     pub feed: FeedHandler,
     pub make_post: MakePostHandler,
     pub post: PostHandler,
-    pub index: IndexHandler,
-    pub script: ScriptHandler,
 }
 
 impl Handlers {
@@ -62,8 +59,6 @@ impl Handlers {
             feed: FeedHandler::new(database.clone()),
             make_post: MakePostHandler::new(database.clone()),
             post: PostHandler::new(database.clone()),
-            index: IndexHandler::new(),
-            script: ScriptHandler::new(),
         }
     }
 }
@@ -153,54 +148,6 @@ impl Handler for PostHandler {
         } else {
             Ok(Response::with((status::NotFound)))
         }
-    }
-}
-
-pub struct IndexHandler;
-
-impl IndexHandler {
-    fn new() -> IndexHandler {
-        IndexHandler {}
-    }
-}
-
-impl Handler for IndexHandler {
-    fn handle(&self, _: &mut Request) -> IronResult<Response> {
-        let mut file = match File::open("static/index.html") {
-            Ok(result) => result,
-            Err(e) => panic!("Error {}", e),
-        };
-
-        let mut contents = String::new();
-
-        file.read_to_string(&mut contents).unwrap();
-        let mut response = Response::with((status::Ok, contents));
-        response.headers.set(ContentType::html());
-        return Ok(response);
-    }
-}
-
-pub struct ScriptHandler;
-
-impl ScriptHandler {
-    fn new() -> ScriptHandler {
-        ScriptHandler {}
-    }
-}
-
-impl Handler for ScriptHandler {
-    fn handle(&self, _: &mut Request) -> IronResult<Response> {
-        let mut file = match File::open("static/yavascript.js") {
-            Ok(result) => result,
-            Err(e) => panic!("Error {}", e),
-        };
-
-        let mut contents = String::new();
-
-        file.read_to_string(&mut contents).unwrap();
-        let mut response = Response::with((status::Ok, contents));
-        response.headers.set(ContentType::plaintext());
-        return Ok(response);
     }
 }
 

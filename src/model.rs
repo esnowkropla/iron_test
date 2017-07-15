@@ -13,7 +13,7 @@ pub struct Post {
 }
 
 impl Post {
-    pub fn new(
+    /*pub fn new(
         summary: &str,
         contents: &str,
         author: &Author,
@@ -27,18 +27,15 @@ impl Post {
             date_time: date_time,
             uuid: uuid,
         }
-    }
+    }*/
 
-    pub fn from_post(
-        summary: &str,
-        contents: &str,
-        author: &Author) -> Post {
+    pub fn from_post(summary: &str, contents: &str, author: &Author) -> Post {
         Post {
             summary: summary.to_string(),
             contents: contents.to_string(),
             author_handle: author.handle.clone(),
             date_time: chrono::offset::Utc::now(),
-            uuid: Uuid::new_v4()
+            uuid: Uuid::new_v4(),
         }
     }
 

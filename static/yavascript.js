@@ -6,10 +6,12 @@ var display = document.getElementById("display");
 var button = document.getElementById("submit");
 button.onclick = function() {
 	var request = new XMLHttpRequest();
-	request.open('POST', "http://192.168.2.18:3000/post");
+	request.open('POST', "http://localhost:3000/post");
 	request.setRequestHeader("Content-type", "application/json");
 	request.onload = function() {
 		alert(request.responseText);
+		summary.value = "";
+		contents.value = "";
 	};
 
 	var send = "{ \"author_handle\": \"" + author.value + "\", \"summary\": \"" + summary.value + "\", \"content\": \"" + contents.value+ "\" }";
@@ -18,13 +20,13 @@ button.onclick = function() {
 
 function ping() {
 	var request = new XMLHttpRequest();
-	request.open('GET', "http://192.168.2.18:3000/feed");
+	request.open('GET', "http://localhost:3000/feed");
 	request.setRequestHeader("Content-type", "application/json");
 	request.onload = function() {
 		fill_feed(request.responseText);
 	};
 	request.send();
-	setTimeout(ping, 5000);
+	setTimeout(ping, 1000);
 }
 ping();
 
@@ -44,7 +46,7 @@ function add_to_display(item) {
 	var link = document.createElement("a");
 	var linkText = document.createTextNode(item.summary);
 	link.appendChild(linkText);
-	link.href = "http://192.168.2.18:3000/post/" + item.uuid;
+	link.href = "http://localhost:3000/post/" + item.uuid;
 
 	para.appendChild(name);
 	para.appendChild(link);
